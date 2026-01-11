@@ -175,4 +175,15 @@ def analyze():
     result['output_language'] = output_lang_name
     return jsonify(result)
 
+    def translate_text(text: str, target_language: str, target_code: str = 'en') -> str:
+    """Translate text using Gemini AI"""
+    if target_language == 'English' or target_code == 'en':
+        return text
+    try:
+        prompt = f"Translate this text to {target_language}. Output ONLY the translation, nothing else:\n\n{text}"
+        return call_gemini(prompt).strip().strip('"')
+    except Exception as e:
+        print(f"Translation error: {e}")
+        return text
+
 
