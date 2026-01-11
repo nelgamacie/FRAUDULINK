@@ -1,18 +1,18 @@
-# 🛡️ FRAUDULINK
+# FRAUDULINK
 
 AI-powered scam call detection platform with multi-language support, real-time audio transcription, and intelligent fraud analysis.
 
-## ✨ Features
+## Features
 
-- 🎯 **Real-Time Scam Detection** - Advanced ML model trained to identify scam patterns
-- 🎤 **Audio Transcription** - Upload audio files and get automatic transcription in 18+ languages
-- 🤖 **Gemini AI Analysis** - Detailed explanations of why a call is suspicious
-- 🌍 **Multi-Language Support** - Results in 18+ languages including English, Spanish, French, Chinese, Arabic, and more
-- 🔊 **Voice Warnings** - Text-to-speech alerts in your selected language (via ElevenLabs)
-- 📊 **Risk Assessment** - Visual risk meter and confidence scoring
-- 💡 **Safety Tips** - Actionable advice to protect yourself from scams
+- **Real-Time Scam Detection** - Advanced ML model trained to identify scam patterns
+- **Audio Transcription** - Upload audio files and get automatic transcription in 18+ languages
+- **Gemini AI Analysis** - Detailed explanations of why a call is suspicious
+- **Multi-Language Support** - Results in 18+ languages including English, Spanish, French, Chinese, Arabic, and more
+- **Voice Warnings** - Text-to-speech alerts in your selected language (via ElevenLabs)
+- **Risk Assessment** - Visual risk meter and confidence scoring
+- **Safety Tips** - Actionable advice to protect yourself from scams
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -49,7 +49,7 @@ python app.py
 http://localhost:8080
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 FRAUDULINK/
@@ -73,7 +73,7 @@ FRAUDULINK/
     └── README.md
 ```
 
-## 🔑 API Keys Setup
+## API Keys Setup
 
 ### Gemini API (Required)
 
@@ -89,11 +89,11 @@ FRAUDULINK/
 
 *Note: Without ElevenLabs, voice warnings will show as text alerts instead.*
 
-## 🌐 Supported Languages
+## Supported Languages
 
 English, Spanish, French, German, Italian, Portuguese, Chinese (Mandarin), Japanese, Korean, Arabic, Hindi, Russian, Turkish, Vietnamese, Thai, Polish, Dutch, Swedish
 
-## 🎨 Technology Stack
+## Technology Stack
 
 - **Backend**: Flask (Python)
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
@@ -102,7 +102,7 @@ English, Spanish, French, German, Italian, Portuguese, Chinese (Mandarin), Japan
 - **Voice**: ElevenLabs TTS
 - **Design**: Light futuristic pastel theme with smooth animations
 
-## 📝 Usage
+## Usage
 
 ### Text Analysis
 1. Navigate to the main page
@@ -144,19 +144,19 @@ Edit `static/css/style.css` to customize colors, fonts, and animations. The them
 }
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+## License
 
 This project was developed for SheHacks 2026.
 
-## 👥 Team
+## Team
 
 Visit the [Team Page](/team) to meet the developers.
 
-## 🆘 Support
+## Support
 
 For issues or questions:
 1. Check the [test_audio/README.md](test_audio/README.md) for audio file setup
@@ -164,7 +164,7 @@ For issues or questions:
 3. Check the browser console for JavaScript errors
 4. Verify Flask server is running on port 8080
 
-## 🔒 Security Note
+## Security Note
 
 Never commit your `.env` file or expose your API keys. The `.gitignore` file is configured to exclude sensitive files.
 
