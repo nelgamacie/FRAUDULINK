@@ -254,3 +254,63 @@ Example: 'Hello, this is calling from your bank's security department. We've det
                </button>
            </div>
 
+
+           <!-- Results Section -->
+           <div class="results-section" id="results-section">
+               <div class="results-placeholder">
+                   <div class="placeholder-icon">
+                       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                           <circle cx="12" cy="12" r="10"/>
+                           <path d="M12 16v-4"/>
+                           <path d="M12 8h.01"/>
+                       </svg>
+                   </div>
+                   <p>Analysis results will appear here</p>
+               </div>
+
+
+               <!-- Results Content (hidden by default) -->
+               <div class="results-content" id="results-content" style="display: none;">
+                   <!-- Verdict Card -->
+                   <div class="verdict-card" id="verdict-card">
+                       <div class="verdict-indicator">
+                           <div class="verdict-ring">
+                               <svg viewBox="0 0 100 100">
+                                   <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none" opacity="0.2"/>
+                                   <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none"
+                                       stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"
+                                       class="verdict-progress"/>
+                               </svg>
+                           </div>
+                           <div class="verdict-icon" id="verdict-icon">
+                               <!-- Icon injected by JS -->
+                           </div>
+                       </div>
+                       <div class="verdict-details">
+                           <span class="verdict-label" id="verdict-label">ANALYSIS COMPLETE</span>
+                           <h2 class="verdict-status" id="verdict-status">Safe</h2>
+                           <p class="verdict-confidence">
+                               Confidence: <span id="confidence-value">0%</span>
+                           </p>
+                       </div>
+                   </div>
+
+
+                   <!-- Risk Level -->
+                   <div class="metric-card">
+                       <div class="metric-header">
+                           <span class="metric-title">Risk Assessment</span>
+                       </div>
+                       <div class="risk-meter">
+                           <div class="risk-bar">
+                               <div class="risk-fill" id="risk-fill"></div>
+                           </div>
+                           <div class="risk-labels">
+                               <span>Low</span>
+                               <span>Medium</span>
+                               <span>High</span>
+                           </div>
+                       </div>
+                       <p class="risk-level" id="risk-level-text">Low Risk</p>
+                   </div>
+
