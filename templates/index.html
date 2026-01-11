@@ -17,3 +17,48 @@
        <div class="gradient-orb orb-3"></div>
    </div>
 
+
+   <!-- Main Container -->
+   <div class="container">
+       <!-- Header -->
+       <header class="header">
+           <div class="logo">
+               <div class="logo-icon">
+                   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <!-- Shield Base -->
+                       <path d="M24 4L8 10V22C8 32 16 38 24 44C32 38 40 32 40 22V10L24 4Z" fill="url(#shieldGradient)" stroke="url(#shieldStroke)" stroke-width="1.5"/>
+                       <!-- Lock inside shield -->
+                       <rect x="18" y="22" width="12" height="10" rx="2" fill="white" opacity="0.95"/>
+                       <path d="M18 22V18C18 14 21 11 24 11C27 11 30 14 30 18V22" stroke="url(#lockStroke)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                       <circle cx="24" cy="27" r="2" fill="url(#lockStroke)"/>
+                       <!-- Alert/Check mark -->
+                       <path d="M20 26L23 29L28 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                       <defs>
+                           <linearGradient id="shieldGradient" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#8b6f47"/>
+                               <stop offset="100%" stop-color="#a6855d"/>
+                           </linearGradient>
+                           <linearGradient id="shieldStroke" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#a6855d"/>
+                               <stop offset="100%" stop-color="#8b6f47"/>
+                           </linearGradient>
+                           <linearGradient id="lockStroke" x1="24" y1="11" x2="24" y2="29" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#8b6f47"/>
+                               <stop offset="100%" stop-color="#a6855d"/>
+                           </linearGradient>
+                       </defs>
+                   </svg>
+               </div>
+               <span class="logo-text">Fraudulink</span>
+           </div>
+           <nav class="nav">
+               <a href="/" class="nav-item active">Analyze</a>
+               <a href="/about" class="nav-item">About</a>
+               <a href="/team" class="nav-item">Team</a>
+           </nav>
+           <div class="status-badge">
+               <span class="status-dot"></span>
+               <span>System Active</span>
+           </div>
+       </header>
+
