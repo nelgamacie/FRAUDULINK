@@ -1,0 +1,15 @@
+# Core Web Framework
+flask==3.0.0
+python-dotenv==1.0.0
+
+# ML Model Dependencies
+scikit-learn==1.4.0
+nltk==3.8.1
+
+# Gemini AI Integration (transcription + analysis)
+# Get your API key at: https://makersuite.google.com/app/apikey
+google-generativeai==0.3.2
+
+# ElevenLabs Integration (optional - for voice warnings)
+# Get your API key at: https://elevenlabs.io/
+elevenlabs==0.2.27
