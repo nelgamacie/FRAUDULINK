@@ -11,6 +11,7 @@ from pathlib import Path
 # Get the directory where this module is located
 MODULE_DIR = Path(__file__).parent
 
+
 class ScamDetector:
     """
     A class to detect scam/fraud calls based on conversation text.
