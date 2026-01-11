@@ -109,4 +109,25 @@ SUPPORTED_LANGUAGES = {
     'nl': 'Dutch',
     'sv': 'Swedish'
 }
+# ============== Routes ==============
+
+@app.route('/')
+def index():
+    """Main page"""
+    return render_template('index.html', languages=SUPPORTED_LANGUAGES)
+
+@app.route('/about')
+def about():
+    """About/Mission page"""
+    return render_template('about.html', languages=SUPPORTED_LANGUAGES)
+
+@app.route('/team')
+def team():
+    """Team page"""
+    return render_template('team.html', languages=SUPPORTED_LANGUAGES)
+
+@app.route('/test-audio/<filename>')
+def serve_test_audio(filename):
+    """Serve test audio files"""
+    return send_from_directory('test_audio', filename)
 
