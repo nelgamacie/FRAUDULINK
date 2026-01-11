@@ -267,4 +267,88 @@ TRANSCRIPT: [the exact transcription]"""
             }), 429
         return jsonify({'error': f'Transcription failed: {error_msg}'}), 500
 
+# ============== Gemini AI Analysis ==============
+
+def get_full_gemini_analysis(text: str, is_scam: bool, confidence: float, risk_level: str, output_language: str = "English", output_lang_code: str = "en") -> dict:
+    """Get comprehensive Gemini analysis, then translate using FREE Google Translate"""
+    result = {}
+    
+    try:
+        classification = "a potential SCAM" if is_scam else "SAFE"
+        
+        # Get analysis in English (uses less Gemini tokens)
+        explanation_prompt = f"""Analyze this phone call transcript classified as {classification}.
+
+Transcript: "{text}"
+
+Provide a clear explanation (2-3 sentences) about:
+1. What red flags or safe indicators are present
+2. What the caller's likely intent is
+
+Keep it professional and easy to understand."""
+
+        explanation = call_gemini(explanation_prompt).strip()
+        
+        # Scam tactics (if scam)
+        tactics = None
+        scam_type = None
+        if is_scam:
+            tactics_prompt = f"""Based on this scam call, identify manipulation tactics being used.
+
+Transcript: "{text}"
+
+List 2-4 specific tactics in bullet points. Be concise."""
+
+            tactics = call_gemini(tactics_prompt).strip()
+            
+            # Scam type
+            type_prompt = f"""Classify this scam into one category.
+
+Transcript: "{text}"
+
+Choose ONE: IRS/Tax Scam, Tech Support Scam, Bank/Financial Scam, Prize/Lottery Scam, Grandparent Scam, Romance Scam, Utility Scam, Government Impersonation, Investment Scam, Other
+
+Only respond with the category name."""
+
+            scam_type = call_gemini(type_prompt).strip()
+        
+        # Safety tips
+        tips_prompt = f"""Provide 3 actionable safety tips based on this {'scam' if is_scam else 'legitimate'} call.
+
+Transcript: "{text}"
+
+Format as a numbered list. Keep each tip brief."""
+
+        tips = call_gemini(tips_prompt).strip()
+        
+        # Translate all results to target language using Gemini
+        if output_lang_code != 'en':
+            try:
+                result['gemini_explanation'] = translate_text(explanation, output_language, output_lang_code)
+                if tactics:
+                    result['scam_tactics'] = translate_text(tactics, output_language, output_lang_code)
+                if scam_type:
+                    result['scam_type'] = translate_text(scam_type, output_language, output_lang_code)
+                result['safety_tips'] = translate_text(tips, output_language, output_lang_code)
+            except Exception as translate_err:
+                print(f"Translation error: {translate_err}")
+                # Fallback to English if translation fails
+                result['gemini_explanation'] = explanation
+                if tactics:
+                    result['scam_tactics'] = tactics
+                if scam_type:
+                    result['scam_type'] = scam_type
+                result['safety_tips'] = tips
+        else:
+            result['gemini_explanation'] = explanation
+            if tactics:
+                result['scam_tactics'] = tactics
+            if scam_type:
+                result['scam_type'] = scam_type
+            result['safety_tips'] = tips
+        
+    except Exception as e:
+        result['gemini_error'] = str(e)
+    
+    return result
 
