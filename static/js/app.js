@@ -8,6 +8,12 @@
 // ============================================
 let currentAudioFile = null;
 let isAnalyzing = false;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordingStartTime = null;
+let recordingTimer = null;
+let audioContext = null;
+let analyser = null;
 
 // ============================================
 // DOM ELEMENTS
@@ -65,7 +71,21 @@ const elements = {
     // Voice Warning
     voiceBtn: document.getElementById('voice-btn'),
     voiceBtnText: document.getElementById('voice-btn-text'),
-    warningAudio: document.getElementById('warning-audio')
+    warningAudio: document.getElementById('warning-audio'),
+    
+    // Recording
+    recordZone: document.getElementById('record-zone'),
+    recordVisualizer: document.getElementById('record-visualizer'),
+    recordStatus: document.getElementById('record-status'),
+    recordStatusText: document.getElementById('record-status-text'),
+    recordTimer: document.getElementById('record-timer'),
+    startRecordBtn: document.getElementById('start-record-btn'),
+    stopRecordBtn: document.getElementById('stop-record-btn'),
+    recordedPreview: document.getElementById('recorded-preview'),
+    recordedDuration: document.getElementById('recorded-duration'),
+    playRecordedBtn: document.getElementById('play-recorded-btn'),
+    discardRecordedBtn: document.getElementById('discard-recorded-btn'),
+    recordedAudio: document.getElementById('recorded-audio')
 };
 
 // ============================================
@@ -195,6 +215,242 @@ sampleBtns.forEach(btn => {
 });
 
 // ============================================
+// LIVE RECORDING
+// ============================================
+
+// Initialize recording functionality after DOM is ready
+function initRecording() {
+    const startBtn = document.getElementById('start-record-btn');
+    const stopBtn = document.getElementById('stop-record-btn');
+    const playBtn = document.getElementById('play-recorded-btn');
+    const discardBtn = document.getElementById('discard-recorded-btn');
+    const recordZone = document.getElementById('record-zone');
+    const recordStatus = document.getElementById('record-status');
+    const recordStatusText = document.getElementById('record-status-text');
+    const recordTimerEl = document.getElementById('record-timer');
+    const recordedPreview = document.getElementById('recorded-preview');
+    const recordedDuration = document.getElementById('recorded-duration');
+    const recordedAudioEl = document.getElementById('recorded-audio');
+    const recordVisualizer = document.getElementById('record-visualizer');
+    
+    let localStream = null;
+    
+    console.log('Initializing recording...', { startBtn, stopBtn });
+    
+    if (!startBtn) {
+        console.log('Start button not found, skipping recording init');
+        return;
+    }
+    
+    // Start Recording
+    startBtn.addEventListener('click', async () => {
+        console.log('Start recording clicked');
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            console.log('Got microphone access');
+            
+            // Set up audio context for visualization
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaStreamSource(localStream);
+            source.connect(analyser);
+            analyser.fftSize = 256;
+            
+            // Set up MediaRecorder - try different mime types
+            let mimeType = 'audio/webm';
+            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                mimeType = 'audio/mp4';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'audio/ogg';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = '';  // Let browser choose
+                    }
+                }
+            }
+            console.log('Using mime type:', mimeType || 'browser default');
+            
+            const options = mimeType ? { mimeType } : {};
+            mediaRecorder = new MediaRecorder(localStream, options);
+            recordedChunks = [];
+            
+            mediaRecorder.ondataavailable = (e) => {
+                console.log('Data available:', e.data.size);
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                console.log('Recording stopped, chunks:', recordedChunks.length);
+                const actualMimeType = mimeType || 'audio/webm';
+                const blob = new Blob(recordedChunks, { type: actualMimeType });
+                const audioURL = URL.createObjectURL(blob);
+                
+                if (recordedAudioEl) {
+                    recordedAudioEl.src = audioURL;
+                }
+                
+                // Create file from blob for upload
+                const extension = actualMimeType.split('/')[1] || 'webm';
+                currentAudioFile = new File([blob], `recording.${extension}`, { type: actualMimeType });
+                console.log('Created audio file:', currentAudioFile.name, currentAudioFile.size);
+                
+                // Show preview
+                const duration = Math.floor((Date.now() - recordingStartTime) / 1000);
+                if (recordedDuration) {
+                    recordedDuration.textContent = `Recording: ${formatTime(duration)}`;
+                }
+                if (recordZone) recordZone.style.display = 'none';
+                if (recordedPreview) recordedPreview.style.display = 'flex';
+                
+                // Clean up stream
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop());
+                }
+                if (audioContext) {
+                    audioContext.close();
+                    audioContext = null;
+                }
+            };
+            
+            // Start recording
+            mediaRecorder.start(1000); // Collect data every second
+            recordingStartTime = Date.now();
+            console.log('Recording started');
+            
+            // Update UI
+            startBtn.style.display = 'none';
+            if (stopBtn) stopBtn.style.display = 'flex';
+            if (recordStatus) recordStatus.classList.add('recording');
+            if (recordStatusText) recordStatusText.textContent = 'Recording...';
+            if (recordZone) recordZone.classList.add('recording');
+            
+            // Start timer
+            updateRecordingTimer();
+            recordingTimer = setInterval(updateRecordingTimer, 1000);
+            
+            // Start visualizer
+            animateVisualizerLocal();
+            
+        } catch (error) {
+            console.error('Error accessing microphone:', error);
+            alert('Could not access microphone. Please ensure you have granted permission.\n\nError: ' + error.message);
+        }
+    });
+    
+    // Stop Recording
+    if (stopBtn) {
+        stopBtn.addEventListener('click', () => {
+            console.log('Stop recording clicked');
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                
+                // Reset UI
+                startBtn.style.display = 'flex';
+                stopBtn.style.display = 'none';
+                if (recordStatus) recordStatus.classList.remove('recording');
+                if (recordStatusText) recordStatusText.textContent = 'Recording complete';
+                if (recordZone) recordZone.classList.remove('recording');
+                
+                // Stop timer
+                clearInterval(recordingTimer);
+            }
+        });
+    }
+    
+    // Play recorded audio
+    if (playBtn && recordedAudioEl) {
+        playBtn.addEventListener('click', () => {
+            if (recordedAudioEl.paused) {
+                recordedAudioEl.play();
+                playBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"/>
+                        <rect x="14" y="4" width="4" height="16"/>
+                    </svg>
+                `;
+            } else {
+                recordedAudioEl.pause();
+                playBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                `;
+            }
+        });
+        
+        recordedAudioEl.addEventListener('ended', () => {
+            playBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            `;
+        });
+    }
+    
+    // Discard recording
+    if (discardBtn) {
+        discardBtn.addEventListener('click', () => {
+            currentAudioFile = null;
+            recordedChunks = [];
+            if (recordedAudioEl) recordedAudioEl.src = '';
+            if (recordedPreview) recordedPreview.style.display = 'none';
+            if (recordZone) recordZone.style.display = 'flex';
+            if (recordTimerEl) recordTimerEl.textContent = '00:00';
+            if (recordStatusText) recordStatusText.textContent = 'Ready to record';
+        });
+    }
+    
+    // Update recording timer display
+    function updateRecordingTimer() {
+        if (recordingStartTime && recordTimerEl) {
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            recordTimerEl.textContent = formatTime(elapsed);
+        }
+    }
+    
+    // Animate visualizer bars
+    function animateVisualizerLocal() {
+        if (!analyser || !recordVisualizer) return;
+        
+        const bars = recordVisualizer.querySelectorAll('.visualizer-bars span');
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        
+        function draw() {
+            if (!mediaRecorder || mediaRecorder.state !== 'recording') return;
+            
+            analyser.getByteFrequencyData(dataArray);
+            
+            bars.forEach((bar, index) => {
+                const value = dataArray[index * 10] || 0;
+                const height = Math.max(4, (value / 255) * 40);
+                bar.style.height = `${height}px`;
+            });
+            
+            requestAnimationFrame(draw);
+        }
+        
+        draw();
+    }
+    
+    console.log('Recording initialized ✓');
+}
+
+// Format seconds to MM:SS
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Initialize recording when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRecording);
+} else {
+    initRecording();
+}
+
+// ============================================
 // ANALYZE BUTTON
 // ============================================
 elements.analyzeBtn.addEventListener('click', async () => {
@@ -209,9 +465,15 @@ elements.analyzeBtn.addEventListener('click', async () => {
             return;
         }
         await analyzeText(text);
-    } else {
+    } else if (activeTab === 'audio') {
         if (!currentAudioFile) {
             alert('Please upload an audio file');
+            return;
+        }
+        await analyzeAudio(currentAudioFile);
+    } else if (activeTab === 'record') {
+        if (!currentAudioFile) {
+            alert('Please record audio first');
             return;
         }
         await analyzeAudio(currentAudioFile);
@@ -407,6 +669,11 @@ function displayResults(result, isAudio = false) {
     
     // Scroll to results
     elements.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Auto-play voice warning after analysis completes
+    setTimeout(() => {
+        playVoiceWarning(result);
+    }, 500);
 }
 
 // ============================================

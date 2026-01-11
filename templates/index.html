@@ -132,6 +132,12 @@
                        </svg>
                        Audio Upload
                    </button>
+                   <button class="tab-btn" data-tab="record">
+                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <circle cx="12" cy="12" r="6" fill="currentColor"/>
+                       </svg>
+                       Live Record
+                   </button>
                </div>
 
 
@@ -201,6 +207,62 @@ Example: 'Hello, this is calling from your bank's security department. We've det
                            </button>
                        </div>
                    </div>
+               </div>
+
+
+               <!-- Live Record Tab -->
+               <div class="tab-content" id="record-tab">
+                   <div class="record-zone" id="record-zone">
+                       <div class="record-visualizer" id="record-visualizer">
+                           <div class="visualizer-bars">
+                               <span></span><span></span><span></span><span></span><span></span>
+                               <span></span><span></span><span></span><span></span><span></span>
+                           </div>
+                       </div>
+                       <div class="record-status" id="record-status">
+                           <span class="record-dot"></span>
+                           <span id="record-status-text">Ready to record</span>
+                       </div>
+                       <div class="record-timer" id="record-timer">00:00</div>
+                       <div class="record-controls">
+                           <button class="record-btn" id="start-record-btn">
+                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <circle cx="12" cy="12" r="6" fill="currentColor"/>
+                               </svg>
+                               <span>Start Recording</span>
+                           </button>
+                           <button class="record-btn stop" id="stop-record-btn" style="display: none;">
+                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <rect x="6" y="6" width="12" height="12" fill="currentColor"/>
+                               </svg>
+                               <span>Stop Recording</span>
+                           </button>
+                       </div>
+                       <p class="record-hint">Click to start recording from your microphone</p>
+                   </div>
+                   <div class="recorded-preview" id="recorded-preview" style="display: none;">
+                       <div class="recorded-info">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                               <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                           </svg>
+                           <span id="recorded-duration">Recording ready</span>
+                       </div>
+                       <div class="recorded-actions">
+                           <button class="play-recorded-btn" id="play-recorded-btn">
+                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <polygon points="5 3 19 12 5 21 5 3"/>
+                               </svg>
+                           </button>
+                           <button class="discard-recorded-btn" id="discard-recorded-btn">
+                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <line x1="18" y1="6" x2="6" y2="18"/>
+                                   <line x1="6" y1="6" x2="18" y2="18"/>
+                               </svg>
+                           </button>
+                       </div>
+                   </div>
+                   <audio id="recorded-audio" style="display: none;"></audio>
                </div>
 
 
@@ -498,6 +560,6 @@ Example: 'Hello, this is calling from your bank's security department. We've det
    </div>
 
 
-   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/app.js') }}?v=4"></script>
 </body>
 </html>

@@ -148,8 +148,17 @@ def analyze():
     output_lang = data.get('output_language', 'en')
     output_lang_name = SUPPORTED_LANGUAGES.get(output_lang, 'English')
     
+    # Debug: Log the text being analyzed
+    print(f"\n=== ML MODEL INPUT ===")
+    print(f"Text: {text[:200]}...")
+    print(f"Text length: {len(text)} chars")
+    
     # Analyze with ML model
     result = detector.analyze(text)
+    
+    # Debug: Log the result
+    print(f"ML Result: is_scam={result['is_scam']}, confidence={result['confidence']:.2%}, risk={result['risk_level']}")
+    print(f"========================\n")
     
     # Get Gemini analysis, translated using FREE Google Translate
     if data.get('include_gemini', False):
@@ -251,6 +260,13 @@ TRANSCRIPT: [the exact transcription]"""
             except Exception as translate_error:
                 print(f"Translation error: {translate_error}")
                 translated_text = original_transcript
+        
+        # Debug: Log transcription result
+        print(f"\n=== TRANSCRIPTION RESULT ===")
+        print(f"Detected language: {detected_language}")
+        print(f"Original transcript: {original_transcript[:200]}...")
+        print(f"Translated text: {translated_text[:200]}...")
+        print(f"============================\n")
         
         return jsonify({
             'text': translated_text,
