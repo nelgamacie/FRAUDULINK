@@ -419,3 +419,18 @@ def speak_warning():
         'language': target_lang_name,
         'method': 'text_only'
     })
+# ============== API Status ==============
+
+@app.route('/api/status')
+def api_status():
+    """Check API configuration status"""
+    return jsonify({
+        'gemini_configured': bool(GEMINI_API_KEY),
+        'elevenlabs_configured': bool(os.getenv("ELEVENLABS_API_KEY")),
+        'model_loaded': True,
+        'languages': list(SUPPORTED_LANGUAGES.keys())
+    })
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8080)
