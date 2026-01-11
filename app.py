@@ -352,3 +352,70 @@ Format as a numbered list. Keep each tip brief."""
     
     return result
 
+# ============== ElevenLabs Voice ==============
+
+@app.route('/speak-warning', methods=['POST'])
+def speak_warning():
+    """Generate voice warning in selected language"""
+    data = request.get_json()
+    
+    is_scam = data.get('is_scam', False)
+    risk_level = data.get('risk_level', 'MEDIUM')
+    target_lang = data.get('language', 'en')
+    target_lang_name = SUPPORTED_LANGUAGES.get(target_lang, 'English')
+    
+    # Warning messages
+    if is_scam:
+        warnings = {
+            "HIGH": "Alert! This is a scam. Do not provide any personal information. Hang up immediately and report this call.",
+            "MEDIUM": "Warning! This call contains suspicious elements. Be very careful. Do not share sensitive information.",
+            "LOW": "Caution. This call has some red flags. Stay alert and verify the caller's identity before proceeding."
+        }
+        text = warnings.get(risk_level, warnings["MEDIUM"])
+    else:
+        text = "Good news. This call appears safe. However, always stay vigilant about sharing personal information."
+    
+    # Translate if not English
+    if target_lang != 'en':
+        try:
+            text = translate_text(text, target_lang_name, target_lang)
+        except:
+            pass
+    
+    # Try ElevenLabs
+    api_key = os.getenv("ELEVENLABS_API_KEY")
+    if api_key:
+        try:
+            voice_id = "21m00Tcm4TlvDq8ikWAM"  # Rachel
+            url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+            headers = {
+                "Accept": "audio/mpeg",
+                "Content-Type": "application/json",
+                "xi-api-key": api_key
+            }
+            payload = {
+                "text": text,
+                "model_id": "eleven_multilingual_v2",
+                "voice_settings": {"stability": 0.5, "similarity_boost": 0.75}
+            }
+            
+            response = http_requests.post(url, json=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            
+            audio_base64 = base64.b64encode(response.content).decode('utf-8')
+            
+            return jsonify({
+                'audio_base64': audio_base64,
+                'text': text,
+                'language': target_lang_name,
+                'method': 'elevenlabs'
+            })
+        except Exception as e:
+            pass
+    
+    # Return text-only if ElevenLabs unavailable
+    return jsonify({
+        'text': text,
+        'language': target_lang_name,
+        'method': 'text_only'
+    })
