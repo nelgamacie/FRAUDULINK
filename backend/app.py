@@ -251,5 +251,78 @@ async def explain_with_gemini(request: GeminiExplanationRequest):
     )
     return {"explanation": explanation}
 
+# ============== ElevenLabs Integration ==============
 
+@app.post("/api/elevenlabs/speak")
+async def generate_speech(request: ElevenLabsRequest):
+    """
+    Generate speech using ElevenLabs API.
+    
+    Args:
+        request: Text to convert to speech and optional voice ID
+        
+    Returns:
+        Audio file URL or base64 encoded audio
+    """
+    try:
+        from elevenlabs import generate, set_api_key
+        
+        api_key = os.getenv("ELEVENLABS_API_KEY")
+        if not api_key:
+            raise HTTPException(
+                status_code=501,
+                detail="ElevenLabs API key not configured. Set ELEVENLABS_API_KEY environment variable."
+            )
+        
+        set_api_key(api_key)
+        
+        # Generate audio
+        audio = generate(
+            text=request.text,
+            voice=request.voice_id or "Rachel",  # Default voice
+            model="eleven_monolingual_v1"
+        )
+        
+        # Save to temp file and return path
+        import base64
+        audio_base64 = base64.b64encode(audio).decode('utf-8')
+        
+        return {
+            "audio_base64": audio_base64,
+            "format": "mp3"
+        }
+        
+    except ImportError:
+        raise HTTPException(
+            status_code=501,
+            detail="ElevenLabs SDK not installed. Install with: pip install elevenlabs"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/elevenlabs/warning")
+async def generate_warning(is_scam: bool, risk_level: str):
+    """
+    Generate a voice warning based on scam detection results.
+    """
+    if is_scam:
+        warnings = {
+            "HIGH": "Warning! This call shows strong signs of being a scam. Do not share any personal information. Hang up immediately.",
+            "MEDIUM": "Caution. This call contains some suspicious elements. Be careful about sharing any sensitive information.",
+            "LOW": "This call has a few minor red flags. Stay alert and verify the caller's identity."
+        }
+        text = warnings.get(risk_level, warnings["MEDIUM"])
+    else:
+        text = "This call appears to be safe. However, always stay vigilant about sharing personal information."
+    
+    request = ElevenLabsRequest(text=text)
+    return await generate_speech(request)
+
+
+# ============== Run Server ==============
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
