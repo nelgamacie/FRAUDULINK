@@ -131,3 +131,48 @@ def serve_test_audio(filename):
     """Serve test audio files"""
     return send_from_directory('test_audio', filename)
 
+
+    @app.route('/analyze', methods=['POST'])
+def analyze():
+    """Analyze text for scam indicators with multi-language output"""
+    data = request.get_json()
+    
+    if not data or 'text' not in data:
+        return jsonify({'error': 'No text provided'}), 400
+    
+    text = data['text'].strip()
+    if not text:
+        return jsonify({'error': 'Text cannot be empty'}), 400
+    
+    output_lang = data.get('output_language', 'en')
+    output_lang_name = SUPPORTED_LANGUAGES.get(output_lang, 'English')
+    
+    # Analyze with ML model
+    result = detector.analyze(text)
+    
+    # Get Gemini analysis, translated using FREE Google Translate
+    if data.get('include_gemini', False):
+        gemini_data = get_full_gemini_analysis(
+            text, result['is_scam'], result['confidence'], result['risk_level'],
+            output_language=output_lang_name,
+            output_lang_code=output_lang
+        )
+        result.update(gemini_data)
+    
+    # Translate UI labels using FREE Google Translate
+    if output_lang != 'en':
+        result['verdict_text'] = translate_text(
+            'Potential Scam Detected' if result['is_scam'] else 'Appears Safe',
+            output_lang_name,
+            output_lang
+        )
+        result['risk_level_text'] = translate_text(
+            f"{result['risk_level'].capitalize()} Risk",
+            output_lang_name,
+            output_lang
+        )
+    
+    result['output_language'] = output_lang_name
+    return jsonify(result)
+
+
