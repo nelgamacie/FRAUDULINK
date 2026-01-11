@@ -38,3 +38,28 @@ app.add_middleware(
 
 # Initialize the scam detector
 detector = ScamDetector()
+
+# ============== Request/Response Models ==============
+
+class TextAnalysisRequest(BaseModel):
+    text: str
+    include_gemini_analysis: bool = False
+
+class AnalysisResponse(BaseModel):
+    is_scam: bool
+    confidence: float
+    label: str
+    risk_level: str
+    original_text: str
+    processed_text: str
+    gemini_explanation: Optional[str] = None
+    warning_audio_url: Optional[str] = None
+
+class GeminiExplanationRequest(BaseModel):
+    text: str
+    is_scam: bool
+    confidence: float
+
+class ElevenLabsRequest(BaseModel):
+    text: str
+    voice_id: Optional[str] = None
