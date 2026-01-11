@@ -185,5 +185,86 @@ def analyze():
     except Exception as e:
         print(f"Translation error: {e}")
         return text
+@app.route('/transcribe', methods=['POST'])
+def transcribe():
+    """Transcribe audio file using Gemini with auto language detection"""
+    if 'audio' not in request.files:
+        return jsonify({'error': 'No audio file provided'}), 400
+    
+    file = request.files['audio']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+    
+    target_lang = request.form.get('target_language', 'en')
+    target_lang_name = SUPPORTED_LANGUAGES.get(target_lang, 'English')
+    
+    allowed_extensions = {'.mp3', '.wav', '.m4a', '.mp4', '.webm', '.ogg', '.aac', '.flac'}
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    
+    if file_ext not in allowed_extensions:
+        return jsonify({'error': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'}), 400
+    
+    if not GEMINI_API_KEY:
+        return jsonify({'error': 'Gemini API key not configured'}), 501
+    
+    try:
+        audio_content = file.read()
+        
+        mime_types = {
+            '.mp3': 'audio/mp3', '.wav': 'audio/wav', '.m4a': 'audio/mp4',
+            '.mp4': 'audio/mp4', '.webm': 'audio/webm', '.ogg': 'audio/ogg',
+            '.aac': 'audio/aac', '.flac': 'audio/flac'
+        }
+        mime_type = mime_types.get(file_ext, 'audio/wav')
+        audio_b64 = base64.b64encode(audio_content).decode('utf-8')
+        
+        # Transcribe with language detection
+        transcribe_prompt = """Listen to this audio carefully and:
+1. Detect what language is being spoken
+2. Transcribe the audio word-for-word in its original language
+
+Format your response EXACTLY like this (no extra text):
+LANGUAGE: [language name in English]
+TRANSCRIPT: [the exact transcription]"""
+        
+        transcription_result = call_gemini(transcribe_prompt, audio_data=audio_b64, mime_type=mime_type)
+        
+        # Parse response
+        detected_language = "English"
+        original_transcript = transcription_result.strip()
+        
+        lines = transcription_result.strip().split('\n')
+        for line in lines:
+            if line.startswith("LANGUAGE:"):
+                detected_language = line.replace("LANGUAGE:", "").strip()
+            elif line.startswith("TRANSCRIPT:"):
+                original_transcript = line.replace("TRANSCRIPT:", "").strip()
+        
+        # Translate to target language using Gemini
+        translated_text = original_transcript
+        if target_lang != 'en' or detected_language.lower() != 'english':
+            # Translate to target language using Gemini
+            try:
+                translated_text = translate_text(original_transcript, target_lang_name, target_lang)
+            except Exception as translate_error:
+                print(f"Translation error: {translate_error}")
+                translated_text = original_transcript
+        
+        return jsonify({
+            'text': translated_text,
+            'original_text': original_transcript,
+            'detected_language': detected_language,
+            'target_language': target_lang_name,
+            'method': 'gemini+google_translate'
+        })
+        
+    except Exception as e:
+        error_msg = str(e)
+        if 'quota' in error_msg.lower() or '429' in error_msg:
+            return jsonify({
+                'error': 'API quota exceeded. The free tier has limited daily requests. Please wait a minute and try again, or try again tomorrow.',
+                'quota_error': True
+            }), 429
+        return jsonify({'error': f'Transcription failed: {error_msg}'}), 500
 
 
