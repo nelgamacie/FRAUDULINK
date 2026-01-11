@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Fraudulink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* About Page Specific Styles */
+        .about-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 5rem 0 4rem;
+            position: relative;
+        }
+        
+        .about-hero-content {
+            text-align: left;
+        }
+        
+        .about-hero-image {
+            width: 100%;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border-accent);
+        }
+        
+        .about-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        @media (max-width: 900px) {
+            .about-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .about-hero-content {
+                text-align: center;
+            }
+            .about-hero-image {
+                height: 300px;
+            }
+        }
+
+        .about-hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .about-hero h1 span {
+            display: block;
+        }
+
+        .about-hero h1 .line-1 {
+            color: var(--text-primary);
+        }
+
+        .about-hero h1 .line-2 {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 0 2rem 0;
+            line-height: 1.7;
+        }
+
+        /* Animated Counter Section */
+        .crisis-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 4rem auto;
+            max-width: 1000px;
+        }
+
+        .crisis-stat {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.02) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .crisis-stat:hover {
+            transform: translateY(-5px);
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.15);
+        }
+
+        .crisis-stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--danger-color);
+            font-family: var(--font-mono);
+            line-height: 1;
+        }
+
+        .crisis-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .crisis-stat-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styling */
+        .about-section {
+            max-width: 900px;
+            margin: 5rem auto;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-glow), rgba(139, 92, 246, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.9;
+        }
+
+        .section-content p {
+            margin-bottom: 1.25rem;
+        }
+
+        .section-content strong {
+            color: var(--text-primary);
+        }
+
+        /* Inspiration Card */
+        .inspiration-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inspiration-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), #8b5cf6);
+        }
+
+        /* Why Elderly Cards */
+        .elderly-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .elderly-card {
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .elderly-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        .elderly-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .elderly-card h4 svg {
+            color: var(--accent-primary);
+        }
+
+        .elderly-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* How It Works */
+        .how-section {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            margin: 4rem 0;
+        }
+
+        .steps-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .step-item {
+            flex: 1;
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), #0891b2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-item h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-item p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .step-connector {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .step-connector::after {
+            content: '→';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-primary);
+            font-size: 1rem;
+        }
+
+        /* Roadmap Timeline */
+        .roadmap-container {
+            position: relative;
+            padding-left: 3rem;
+            margin-top: 2.5rem;
+        }
+
+        .roadmap-line {
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--safe-color), var(--accent-primary), var(--text-muted));
+        }
+
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-left: 2rem;
+        }
+
+        .roadmap-marker {
+            position: absolute;
+            left: -3rem;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 3px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .roadmap-item.current .roadmap-marker {
+            border-color: var(--safe-color);
+            background: var(--safe-color);
+            box-shadow: 0 0 20px var(--safe-glow);
+        }
+
+        .roadmap-item.current .roadmap-marker::after {
+            content: '✓';
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .roadmap-item.next .roadmap-marker {
+            border-color: var(--accent-primary);
+            animation: pulseBorder 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseBorder {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 20px var(--accent-glow); }
+        }
+
+        .roadmap-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-item.current .roadmap-card {
+            border-color: var(--safe-color);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent);
+        }
+
+        .roadmap-item.next .roadmap-card {
+            border-color: var(--accent-primary);
+        }
+
+        .roadmap-card:hover {
+            transform: translateX(10px);
+        }
+
+        .roadmap-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .roadmap-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .roadmap-badge.live {
+            background: var(--safe-glow);
+            color: var(--safe-color);
+        }
+
+        .roadmap-badge.next {
+            background: var(--accent-glow);
+            color: var(--accent-secondary);
+        }
+
+        .roadmap-badge.future {
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--text-muted);
+        }
+
+        .roadmap-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 2rem;
+            margin: 4rem 0 2rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(ellipse at top, var(--accent-glow), transparent 70%);
+            opacity: 0.3;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), #0891b2);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-family: var(--font-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px var(--accent-glow);
+        }
+
+        @media (max-width: 900px) {
+            .crisis-stats { grid-template-columns: repeat(2, 1fr); }
+            .elderly-grid { grid-template-columns: 1fr; }
+            .steps-container { flex-direction: column; }
+            .step-connector { 
+                width: 2px; 
+                height: 40px; 
+                transform: rotate(90deg);
+            }
+            .step-connector::after { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .crisis-stats { grid-template-columns: 1fr; }
+            .crisis-stat-value { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Shield Base -->
+                        <path d="M24 4L8 10V22C8 32 16 38 24 44C32 38 40 32 40 22V10L24 4Z" fill="url(#shieldGradient)" stroke="url(#shieldStroke)" stroke-width="1.5"/>
+                        <!-- Lock inside shield -->
+                        <rect x="18" y="22" width="12" height="10" rx="2" fill="white" opacity="0.95"/>
+                        <path d="M18 22V18C18 14 21 11 24 11C27 11 30 14 30 18V22" stroke="url(#lockStroke)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        <circle cx="24" cy="27" r="2" fill="url(#lockStroke)"/>
+                        <!-- Alert/Check mark -->
+                        <path d="M20 26L23 29L28 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="shieldGradient" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#8b6f47"/>
+                                <stop offset="100%" stop-color="#a6855d"/>
+                            </linearGradient>
+                            <linearGradient id="shieldStroke" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#a6855d"/>
+                                <stop offset="100%" stop-color="#8b6f47"/>
+                            </linearGradient>
+                            <linearGradient id="lockStroke" x1="24" y1="11" x2="24" y2="29" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#8b6f47"/>
+                                <stop offset="100%" stop-color="#a6855d"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">Fraudulink</span>
+            </div>
+            <nav class="nav">
+                <a href="/" class="nav-item">Analyze</a>
+                <a href="/about" class="nav-item active">About</a>
+                <a href="/team" class="nav-item">Team</a>
+            </nav>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>System Active</span>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <section class="about-hero">
+            <div class="about-hero-content">
+                <h1>
+                    <span class="line-1">Protecting Those</span>
+                    <span class="line-2">Who Protected Us</span>
+                </h1>
+                <p class="about-hero-subtitle">
+                    Phone scams steal billions and devastate lives. We're building AI-powered 
+                    protection for the most vulnerable members of our communities.
+                </p>
+            </div>
+            <div class="about-hero-image">
+                <img src="{{ url_for('static', filename='pexels-photo-3768131.jpeg') }}" alt="Grandparent with granddaughter">
+            </div>
+        </section>
+
+        <!-- Crisis Statistics -->
+        <div class="crisis-stats">
+            <div class="crisis-stat">
+                <div class="crisis-stat-value" data-target="3.4">$0B</div>
+                <div class="crisis-stat-label">Lost by seniors annually</div>
+                <div class="crisis-stat-source">FBI IC3 Report 2024</div>
+            </div>
+            <div class="crisis-stat">
+                <div class="crisis-stat-value" data-target="101">0K+</div>
+                <div class="crisis-stat-label">Elderly victims reported</div>
+                <div class="crisis-stat-source">FTC Consumer Sentinel</div>
+            </div>
+            <div class="crisis-stat">
+                <div class="crisis-stat-value" data-target="35">0%</div>
+                <div class="crisis-stat-label">Of fraud targets are 60+</div>
+                <div class="crisis-stat-source">AARP Research</div>
+            </div>
+            <div class="crisis-stat">
+                <div class="crisis-stat-value" data-target="14">$0K</div>
+                <div class="crisis-stat-label">Avg. loss ages 70-79</div>
+                <div class="crisis-stat-source">FBI Elder Fraud Report</div>
+            </div>
+        </div>
+
+        <!-- Inspiration Section -->
+        <section class="about-section">
+            <div class="inspiration-card">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <h2>The Inspiration</h2>
+                </div>
+                <div class="section-content">
+                    <p>
+                        <strong>Fraudulink was born from personal experience.</strong> Every member of our team 
+                        has witnessed someone they love—a grandparent, parent, or family friend—receive 
+                        suspicious phone calls that left them confused, frightened, or financially devastated.
+                    </p>
+                    <p>
+                        We watched helplessly as scammers used increasingly sophisticated tactics to prey on 
+                        the trust and goodwill of seniors. The heartbreak of seeing someone lose their life 
+                        savings or feel violated after falling victim to a scam is something we never want 
+                        another family to experience.
+                    </p>
+                    <p>
+                        That's why we came together at <strong>SheHacks 2026</strong>—to transform our 
+                        frustration into action and build technology that genuinely protects the people 
+                        who need it most.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Elderly Section -->
+        <section class="about-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <h2>Why Seniors Are Targeted</h2>
+            </div>
+
+            <div class="elderly-grid">
+                <div class="elderly-card">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        Trust & Politeness
+                    </h4>
+                    <p>Raised to be courteous and trusting, making them less likely to hang up or question authority figures on calls.</p>
+                </div>
+                <div class="elderly-card">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        Financial Stability
+                    </h4>
+                    <p>Built up retirement savings, home equity, and good credit over decades—making them lucrative targets.</p>
+                </div>
+                <div class="elderly-card">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Social Isolation
+                    </h4>
+                    <p>Living alone, they may welcome phone contact, making them more vulnerable to friendly-sounding manipulation.</p>
+                </div>
+                <div class="elderly-card">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        Language Barriers
+                    </h4>
+                    <p>Immigrant seniors face additional challenges, often targeted with scams in their native language.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="about-section how-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                        <polyline points="2 17 12 22 22 17"/>
+                        <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                </div>
+                <h2>How Fraudulink Works</h2>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h4>Capture</h4>
+                    <p>Upload an audio recording or paste a transcript. We auto-detect 18+ languages.</p>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h4>Analyze</h4>
+                    <p>ML model + Gemini AI work together to identify scam patterns and manipulation tactics.</p>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h4>Protect</h4>
+                    <p>Get instant warnings with explanations and voice alerts in your preferred language.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section class="about-section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <h2>The Road Ahead</h2>
+            </div>
+
+            <div class="roadmap-container">
+                <div class="roadmap-line"></div>
+                
+                <div class="roadmap-item current">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-card">
+                        <h4>
+                            Web Application
+                            <span class="roadmap-badge live">Live</span>
+                        </h4>
+                        <p>Full-featured web platform with audio transcription, 18+ language support, and AI-powered scam analysis.</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-item next">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-card">
+                        <h4>
+                            Mobile App
+                            <span class="roadmap-badge next">Coming Soon</span>
+                        </h4>
+                        <p>Native iOS & Android apps with one-tap call recording, real-time analysis, and instant scam alerts on the go.</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-item">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-card">
+                        <h4>
+                            Live Call Monitoring
+                            <span class="roadmap-badge future">Future</span>
+                        </h4>
+                        <p>Background service that monitors active calls and warns you in real-time when scam indicators are detected.</p>
+                    </div>
+                </div>
+
+                <div class="roadmap-item">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-card">
+                        <h4>
+                            Family Protection Network
+                            <span class="roadmap-badge future">Vision</span>
+                        </h4>
+                        <p>Connect family members so caregivers receive instant alerts when elderly loved ones get suspicious calls.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Ready to Protect Someone You Love?</h2>
+            <p>Try Fraudulink now—analysis takes just seconds.</p>
+            <a href="/" class="cta-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Start Analysis
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Developed Jan 2026</p>
+                <div class="footer-links">
+                    <span>Powered by ML + Gemini + ElevenLabs</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Animate statistics on scroll
+        const stats = document.querySelectorAll('.crisis-stat-value');
+        
+        const animateValue = (element, start, end, duration, prefix = '', suffix = '') => {
+            const startTime = performance.now();
+            const isDecimal = String(end).includes('.');
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = isDecimal 
+                    ? (start + (end - start) * easeOut).toFixed(1)
+                    : Math.round(start + (end - start) * easeOut);
+                
+                element.textContent = prefix + current + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseFloat(el.dataset.target);
+                    const text = el.textContent;
+                    const prefix = text.includes('$') ? '$' : '';
+                    const suffix = text.includes('K') ? 'K+' : text.includes('B') ? 'B' : text.includes('%') ? '%' : '';
+                    
+                    animateValue(el, 0, target, 2000, prefix, suffix);
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        stats.forEach(stat => observer.observe(stat));
+    </script>
+</body>
+</html>
