@@ -1,1 +1,52 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Test Audio (optional - uncomment if you don't want to commit audio files)
+# test_audio/*.wav
+# test_audio/*.mp3
+# test_audio/*.m4a
+# test_audio/*.mp4
+# test_audio/*.webm
+# test_audio/*.ogg
+
+# Keep the README in test_audio
+!test_audio/README.md
+
+# Logs
+*.log
+
+# Flask
+instance/
+.webassets-cache
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
