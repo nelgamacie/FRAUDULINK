@@ -190,4 +190,66 @@ async def analyze_audio(file: UploadFile = File(...), include_gemini: bool = Fal
         "analysis": analysis_result
     }
 
+# ============== Gemini AI Integration ==============
+
+async def get_gemini_explanation(text: str, is_scam: bool, confidence: float) -> str:
+    """
+    Get an explanation from Gemini AI about why the text is/isn't a scam.
+    
+    Args:
+        text: The original text
+        is_scam: Whether it was classified as a scam
+        confidence: Confidence level of the classification
+        
+    Returns:
+        Explanation string from Gemini
+    """
+    try:
+        import google.generativeai as genai
+        
+        # Configure Gemini (API key should be in environment)
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return "Gemini API key not configured. Set GEMINI_API_KEY environment variable."
+        
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-pro')
+        
+        classification = "a potential SCAM" if is_scam else "SAFE"
+        
+        prompt = f"""Analyze this phone call transcript and explain why it might be {classification}.
+        
+Transcript: "{text}"
+
+Classification: {classification} (Confidence: {confidence:.0%})
+
+Provide a brief, helpful explanation (2-3 sentences) about:
+1. What specific indicators suggest this is {classification}
+2. What the caller might be trying to do (if scam)
+3. One actionable tip for the user
+
+Keep the response concise and user-friendly."""
+
+        response = model.generate_content(prompt)
+        return response.text
+        
+    except ImportError:
+        return "Gemini SDK not installed. Install with: pip install google-generativeai"
+    except Exception as e:
+        return f"Error getting Gemini explanation: {str(e)}"
+
+
+@app.post("/api/gemini/explain")
+async def explain_with_gemini(request: GeminiExplanationRequest):
+    """
+    Get Gemini AI explanation for a scam analysis result.
+    """
+    explanation = await get_gemini_explanation(
+        request.text,
+        request.is_scam,
+        request.confidence
+    )
+    return {"explanation": explanation}
+
+
 
