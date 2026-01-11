@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Fraudulink | AI Scam Detection</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+   <!-- Ambient Background -->
+   <div class="ambient-bg">
+       <div class="gradient-orb orb-1"></div>
+       <div class="gradient-orb orb-2"></div>
+       <div class="gradient-orb orb-3"></div>
+   </div>
+
+
+   <!-- Main Container -->
+   <div class="container">
+       <!-- Header -->
+       <header class="header">
+           <div class="logo">
+               <div class="logo-icon">
+                   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <!-- Shield Base -->
+                       <path d="M24 4L8 10V22C8 32 16 38 24 44C32 38 40 32 40 22V10L24 4Z" fill="url(#shieldGradient)" stroke="url(#shieldStroke)" stroke-width="1.5"/>
+                       <!-- Lock inside shield -->
+                       <rect x="18" y="22" width="12" height="10" rx="2" fill="white" opacity="0.95"/>
+                       <path d="M18 22V18C18 14 21 11 24 11C27 11 30 14 30 18V22" stroke="url(#lockStroke)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                       <circle cx="24" cy="27" r="2" fill="url(#lockStroke)"/>
+                       <!-- Alert/Check mark -->
+                       <path d="M20 26L23 29L28 24" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                       <defs>
+                           <linearGradient id="shieldGradient" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#8b6f47"/>
+                               <stop offset="100%" stop-color="#a6855d"/>
+                           </linearGradient>
+                           <linearGradient id="shieldStroke" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#a6855d"/>
+                               <stop offset="100%" stop-color="#8b6f47"/>
+                           </linearGradient>
+                           <linearGradient id="lockStroke" x1="24" y1="11" x2="24" y2="29" gradientUnits="userSpaceOnUse">
+                               <stop offset="0%" stop-color="#8b6f47"/>
+                               <stop offset="100%" stop-color="#a6855d"/>
+                           </linearGradient>
+                       </defs>
+                   </svg>
+               </div>
+               <span class="logo-text">Fraudulink</span>
+           </div>
+           <nav class="nav">
+               <a href="/" class="nav-item active">Analyze</a>
+               <a href="/about" class="nav-item">About</a>
+               <a href="/team" class="nav-item">Team</a>
+           </nav>
+           <div class="status-badge">
+               <span class="status-dot"></span>
+               <span>System Active</span>
+           </div>
+       </header>
+
+
+       <!-- Top Banner -->
+       <div class="top-banner">
+           <div class="banner-carousel">
+               <div class="banner-text-wrapper">
+                   <span class="banner-text">Protect yourself and your loved ones from phone scams with real-time AI detection. Upload audio, paste transcripts, get instant analysis in 18+ languages, detailed explanations, and voice warnings.</span>
+                   <span class="banner-text">Protect yourself and your loved ones from phone scams with real-time AI detection. Upload audio, paste transcripts, get instant analysis in 18+ languages, detailed explanations, and voice warnings.</span>
+               </div>
+           </div>
+       </div>
+
+
+       <!-- Quick Stats -->
+       <section class="quick-stats">
+           <div class="quick-stat">
+               <div class="quick-stat-value">98%</div>
+               <div class="quick-stat-label">Accuracy</div>
+           </div>
+           <div class="quick-stat">
+               <div class="quick-stat-value">18+</div>
+               <div class="quick-stat-label">Languages</div>
+           </div>
+           <div class="quick-stat">
+               <div class="quick-stat-value">&lt;3s</div>
+               <div class="quick-stat-label">Analysis Time</div>
+           </div>
+           <div class="quick-stat">
+               <div class="quick-stat-value">24/7</div>
+               <div class="quick-stat-label">Protection</div>
+           </div>
+       </section>
+
+
+       <!-- Hero Section -->
+       <section class="hero">
+           <h1 class="hero-title">
+               <span class="title-line">Intelligent</span>
+               <span class="title-line accent">Fraud Detection</span>
+           </h1>
+           <p class="hero-subtitle">
+               Advanced AI-powered analysis to identify and protect against scam calls.
+               Paste a transcript or upload an audio file to begin.
+           </p>
+       </section>
+
+
+       <!-- Main Analysis Panel -->
+       <main class="analysis-panel">
+           <!-- Input Section -->
+           <div class="input-section">
+               <div class="input-tabs">
+                   <button class="tab-btn active" data-tab="text">
+                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                           <polyline points="14,2 14,8 20,8"/>
+                           <line x1="16" y1="13" x2="8" y2="13"/>
+                           <line x1="16" y1="17" x2="8" y2="17"/>
+                           <polyline points="10,9 9,9 8,9"/>
+                       </svg>
+                       Text Input
+                   </button>
+                   <button class="tab-btn" data-tab="audio">
+                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                           <line x1="12" y1="19" x2="12" y2="23"/>
+                           <line x1="8" y1="23" x2="16" y2="23"/>
+                       </svg>
+                       Audio Upload
+                   </button>
+               </div>
+
+
+               <!-- Text Input Tab -->
+               <div class="tab-content active" id="text-tab">
+                   <div class="textarea-wrapper">
+                       <textarea
+                           id="transcript-input"
+                           placeholder="Paste the call transcript here...
+
+
+Example: 'Hello, this is calling from your bank's security department. We've detected suspicious activity on your account and need to verify your identity. Please provide your account number and PIN to secure your account.'"
+                           rows="8"
+                       ></textarea>
+                       <div class="char-count">
+                           <span id="char-counter">0</span> characters
+                       </div>
+                   </div>
+               </div>
+
+
+               <!-- Audio Upload Tab -->
+               <div class="tab-content" id="audio-tab">
+                   <div class="upload-zone" id="upload-zone">
+                       <input type="file" id="audio-input" accept=".mp3,.wav,.m4a,.mp4,.webm,.ogg" hidden>
+                       <div class="upload-icon">
+                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                               <polyline points="17,8 12,3 7,8"/>
+                               <line x1="12" y1="3" x2="12" y2="15"/>
+                           </svg>
+                       </div>
+                       <p class="upload-text">Drag & drop audio file or <span class="upload-link">browse</span></p>
+                       <p class="upload-formats">Supports MP3, WAV, M4A, MP4, WebM, OGG</p>
+                   </div>
+                   <div class="file-preview" id="file-preview" style="display: none;">
+                       <div class="file-info">
+                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M9 18V5l12-2v13"/>
+                               <circle cx="6" cy="18" r="3"/>
+                               <circle cx="18" cy="16" r="3"/>
+                           </svg>
+                           <span id="file-name">audio.mp3</span>
+                       </div>
+                       <button class="remove-file" id="remove-file">
+                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <line x1="18" y1="6" x2="6" y2="18"/>
+                               <line x1="6" y1="6" x2="18" y2="18"/>
+                           </svg>
+                       </button>
+                   </div>
+                   <!-- Test Audio Samples -->
+                   <div class="sample-audio-section">
+                       <p class="sample-label">Or try a sample audio:</p>
+                       <div class="sample-buttons">
+                           <button class="sample-btn" data-audio="test.wav">
+                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <polygon points="5 3 19 12 5 21 5 3"/>
+                               </svg>
+                               Scam Sample
+                           </button>
+                           <button class="sample-btn" data-audio="ham1.wav">
+                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <polygon points="5 3 19 12 5 21 5 3"/>
+                               </svg>
+                               Safe Sample
+                           </button>
+                       </div>
+                   </div>
+               </div>
+
+
+               <!-- Options -->
+               <div class="options-row">
+                   <label class="checkbox-wrapper">
+                       <input type="checkbox" id="gemini-toggle">
+                       <span class="checkbox-custom"></span>
+                       <span class="checkbox-label">Include Gemini AI Analysis</span>
+                       <span class="badge">Enhanced</span>
+                   </label>
+               </div>
+
+
+               <!-- Language Selection -->
+               <div class="language-section">
+                   <div class="language-row">
+                       <div class="language-select-wrapper">
+                           <label class="language-label">
+                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <circle cx="12" cy="12" r="10"/>
+                                   <line x1="2" y1="12" x2="22" y2="12"/>
+                                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                               </svg>
+                               Output Language
+                           </label>
+                           <select id="output-language" class="language-select">
+                               {% for code, name in languages.items() %}
+                               <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+                               {% endfor %}
+                           </select>
+                       </div>
+                   </div>
+                   <p class="language-hint">Audio in any language will be auto-detected and translated</p>
+               </div>
+
+
+               <!-- Analyze Button -->
+               <button class="analyze-btn" id="analyze-btn">
+                   <span class="btn-text">Analyze Transcript</span>
+                   <span class="btn-loader">
+                       <svg class="spinner" viewBox="0 0 24 24">
+                           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-linecap="round"/>
+                       </svg>
+                       Processing...
+                   </span>
+                   <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                       <polyline points="22,4 12,14.01 9,11.01"/>
+                   </svg>
+               </button>
+           </div>
+
+
+           <!-- Results Section -->
+           <div class="results-section" id="results-section">
+               <div class="results-placeholder">
+                   <div class="placeholder-icon">
+                       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                           <circle cx="12" cy="12" r="10"/>
+                           <path d="M12 16v-4"/>
+                           <path d="M12 8h.01"/>
+                       </svg>
+                   </div>
+                   <p>Analysis results will appear here</p>
+               </div>
+
+
+               <!-- Results Content (hidden by default) -->
+               <div class="results-content" id="results-content" style="display: none;">
+                   <!-- Verdict Card -->
+                   <div class="verdict-card" id="verdict-card">
+                       <div class="verdict-indicator">
+                           <div class="verdict-ring">
+                               <svg viewBox="0 0 100 100">
+                                   <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none" opacity="0.2"/>
+                                   <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none"
+                                       stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"
+                                       class="verdict-progress"/>
+                               </svg>
+                           </div>
+                           <div class="verdict-icon" id="verdict-icon">
+                               <!-- Icon injected by JS -->
+                           </div>
+                       </div>
+                       <div class="verdict-details">
+                           <span class="verdict-label" id="verdict-label">ANALYSIS COMPLETE</span>
+                           <h2 class="verdict-status" id="verdict-status">Safe</h2>
+                           <p class="verdict-confidence">
+                               Confidence: <span id="confidence-value">0%</span>
+                           </p>
+                       </div>
+                   </div>
+
+
+                   <!-- Risk Level -->
+                   <div class="metric-card">
+                       <div class="metric-header">
+                           <span class="metric-title">Risk Assessment</span>
+                       </div>
+                       <div class="risk-meter">
+                           <div class="risk-bar">
+                               <div class="risk-fill" id="risk-fill"></div>
+                           </div>
+                           <div class="risk-labels">
+                               <span>Low</span>
+                               <span>Medium</span>
+                               <span>High</span>
+                           </div>
+                       </div>
+                       <p class="risk-level" id="risk-level-text">Low Risk</p>
+                   </div>
+
+
+                   <!-- Gemini Explanation -->
+                   <div class="explanation-card" id="explanation-card" style="display: none;">
+                       <div class="explanation-header">
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                           </svg>
+                           <span>Gemini AI Analysis</span>
+                       </div>
+                       <p class="explanation-text" id="explanation-text"></p>
+                   </div>
+
+
+                   <!-- Scam Type Badge -->
+                   <div class="scam-type-card" id="scam-type-card" style="display: none;">
+                       <span class="scam-type-label">Scam Type Identified:</span>
+                       <span class="scam-type-badge" id="scam-type-text"></span>
+                   </div>
+
+
+                   <!-- Scam Tactics -->
+                   <div class="tactics-card" id="tactics-card" style="display: none;">
+                       <div class="tactics-header">
+                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                           </svg>
+                           <span>Manipulation Tactics Detected</span>
+                       </div>
+                       <div class="tactics-content" id="tactics-text"></div>
+                   </div>
+
+
+                   <!-- Safety Tips -->
+                   <div class="tips-card" id="tips-card" style="display: none;">
+                       <div class="tips-header">
+                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                           </svg>
+                           <span>Safety Tips</span>
+                       </div>
+                       <div class="tips-content" id="tips-text"></div>
+                   </div>
+
+
+                   <!-- Transcription (for audio) -->
+                   <div class="transcription-card" id="transcription-card" style="display: none;">
+                       <div class="transcription-header">
+                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                               <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                           </svg>
+                           <span>Transcription <span id="detected-lang-badge" class="lang-badge"></span></span>
+                       </div>
+                       <p class="transcription-text" id="transcription-text"></p>
+                       <!-- Original text if translated -->
+                       <div id="original-text-section" style="display: none;">
+                           <p class="original-label">Original:</p>
+                           <p class="transcription-text original" id="original-text"></p>
+                       </div>
+                   </div>
+
+
+                   <!-- Voice Warning Button -->
+                   <button class="voice-btn" id="voice-btn" style="display: none;">
+                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                       </svg>
+                       <span id="voice-btn-text">Play Voice Warning</span>
+                   </button>
+                   <audio id="warning-audio" style="display: none;"></audio>
+               </div>
+           </div>
+       </main>
+
+
+       <!-- Features Section -->
+       <section class="features-section">
+           <h2 class="section-title">Why Fraudulink?</h2>
+           <div class="features-grid">
+               <div class="feature-card">
+                   <div class="feature-card-inner">
+                       <div class="feature-card-front">
+                           <div class="feature-icon">
+                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                               </svg>
+                           </div>
+                           <h3>Real-Time Analysis</h3>
+                       </div>
+                       <div class="feature-card-back">
+                           <p>Get instant scam detection results in seconds with our advanced ML model</p>
+                       </div>
+                   </div>
+               </div>
+               <div class="feature-card">
+                   <div class="feature-card-inner">
+                       <div class="feature-card-front">
+                           <div class="feature-icon">
+                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                   <path d="M2 17l10 5 10-5"/>
+                                   <path d="M2 12l10 5 10-5"/>
+                               </svg>
+                           </div>
+                           <h3>AI Explanations</h3>
+                       </div>
+                       <div class="feature-card-back">
+                           <p>Understand why a call is suspicious with detailed Gemini AI insights</p>
+                       </div>
+                   </div>
+               </div>
+               <div class="feature-card">
+                   <div class="feature-card-inner">
+                       <div class="feature-card-front">
+                           <div class="feature-icon">
+                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                   <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                               </svg>
+                           </div>
+                           <h3>Audio Support</h3>
+                       </div>
+                       <div class="feature-card-back">
+                           <p>Upload audio files and get automatic transcription and analysis</p>
+                       </div>
+                   </div>
+               </div>
+               <div class="feature-card">
+                   <div class="feature-card-inner">
+                       <div class="feature-card-front">
+                           <div class="feature-icon">
+                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                   <path d="M9 12l2 2 4-4"/>
+                               </svg>
+                           </div>
+                           <h3>Safety Tips</h3>
+                       </div>
+                       <div class="feature-card-back">
+                           <p>Receive actionable advice on how to protect yourself from scams</p>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </section>
+
+
+       <!-- How Fraudulink Works -->
+       <section class="how-section">
+           <h2 class="section-title">How Fraudulink Works</h2>
+           <div class="steps-container">
+               <div class="step-card">
+                   <div class="step-number">1</div>
+                   <h3>Upload or Paste</h3>
+                   <p>Share your call transcript or upload an audio file</p>
+               </div>
+               <div class="step-connector"></div>
+               <div class="step-card">
+                   <div class="step-number">2</div>
+                   <h3>AI Analysis</h3>
+                   <p>Our ML model analyzes the content for scam indicators</p>
+               </div>
+               <div class="step-connector"></div>
+               <div class="step-card">
+                   <div class="step-number">3</div>
+                   <h3>Get Results</h3>
+                   <p>Receive instant detection results with detailed explanations</p>
+               </div>
+           </div>
+       </section>
+
+
+       <!-- Footer -->
+       <footer class="footer">
+           <div class="footer-content">
+               <p>Developed Jan 2026</p>
+               <div class="footer-links">
+                   <span>Powered by ML + Gemini + ElevenLabs</span>
+               </div>
+       </footer>
+   </div>
+
+
+   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
