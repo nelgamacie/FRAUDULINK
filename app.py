@@ -87,3 +87,26 @@ def call_gemini(prompt: str, audio_data: str = None, mime_type: str = None, max_
             raise
     
     raise last_error or Exception("Max retries exceeded")
+
+    # Supported languages
+SUPPORTED_LANGUAGES = {
+    'en': 'English',
+    'es': 'Spanish',
+    'fr': 'French',
+    'de': 'German',
+    'it': 'Italian',
+    'pt': 'Portuguese',
+    'zh': 'Chinese (Mandarin)',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'ar': 'Arabic',
+    'hi': 'Hindi',
+    'ru': 'Russian',
+    'tr': 'Turkish',
+    'vi': 'Vietnamese',
+    'th': 'Thai',
+    'pl': 'Polish',
+    'nl': 'Dutch',
+    'sv': 'Swedish'
+}
+
