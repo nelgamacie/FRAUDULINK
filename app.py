@@ -24,6 +24,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Initialize the scam detector
 detector = ScamDetector()
+
 # Gemini configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # Using gemini-2.0-flash-exp for audio transcription
@@ -88,7 +89,7 @@ def call_gemini(prompt: str, audio_data: str = None, mime_type: str = None, max_
     
     raise last_error or Exception("Max retries exceeded")
 
-    # Supported languages
+# Supported languages
 SUPPORTED_LANGUAGES = {
     'en': 'English',
     'es': 'Spanish',
@@ -109,6 +110,7 @@ SUPPORTED_LANGUAGES = {
     'nl': 'Dutch',
     'sv': 'Swedish'
 }
+
 # ============== Routes ==============
 
 @app.route('/')
@@ -131,8 +133,7 @@ def serve_test_audio(filename):
     """Serve test audio files"""
     return send_from_directory('test_audio', filename)
 
-
-    @app.route('/analyze', methods=['POST'])
+@app.route('/analyze', methods=['POST'])
 def analyze():
     """Analyze text for scam indicators with multi-language output"""
     data = request.get_json()
@@ -175,7 +176,7 @@ def analyze():
     result['output_language'] = output_lang_name
     return jsonify(result)
 
-    def translate_text(text: str, target_language: str, target_code: str = 'en') -> str:
+def translate_text(text: str, target_language: str, target_code: str = 'en') -> str:
     """Translate text using Gemini AI"""
     if target_language == 'English' or target_code == 'en':
         return text
@@ -185,6 +186,7 @@ def analyze():
     except Exception as e:
         print(f"Translation error: {e}")
         return text
+
 @app.route('/transcribe', methods=['POST'])
 def transcribe():
     """Transcribe audio file using Gemini with auto language detection"""
@@ -266,6 +268,7 @@ TRANSCRIPT: [the exact transcription]"""
                 'quota_error': True
             }), 429
         return jsonify({'error': f'Transcription failed: {error_msg}'}), 500
+
 
 # ============== Gemini AI Analysis ==============
 
@@ -352,6 +355,7 @@ Format as a numbered list. Keep each tip brief."""
     
     return result
 
+
 # ============== ElevenLabs Voice ==============
 
 @app.route('/speak-warning', methods=['POST'])
@@ -419,6 +423,8 @@ def speak_warning():
         'language': target_lang_name,
         'method': 'text_only'
     })
+
+
 # ============== API Status ==============
 
 @app.route('/api/status')
